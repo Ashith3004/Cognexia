@@ -1,12 +1,9 @@
 from flask import Flask, render_template, request, redirect
+from ai_engine import match_users
+import json
+import os
 import gspread
 from google.oauth2.service_account import Credentials
-from ai_engine import match_users
-import os
-
-app = Flask(__name__)
-
-# ---------------- GOOGLE SHEETS SETUP ----------------
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -14,8 +11,12 @@ SCOPES = [
 ]
 
 try:
-    creds = Credentials.from_service_account_file(
-        "credentials/service_account.json",
+    service_account_info = json.loads(
+        os.environ["GOOGLE_CREDS_JSON"]
+    )
+
+    creds = Credentials.from_service_account_info(
+        service_account_info,
         scopes=SCOPES
     )
 
@@ -29,6 +30,7 @@ except Exception as e:
     print("❌ Google Sheets connection error:", e)
     users_ws = None
     skills_ws = None
+
 
 
 # ---------------- ROUTES ----------------
@@ -136,3 +138,4 @@ if __name__ == "__main__":
         port=int(os.environ.get("PORT", 5000)),
         debug=os.environ.get("FLASK_ENV") == "development"
     )
+
