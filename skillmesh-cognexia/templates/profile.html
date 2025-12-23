@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Profile | SkillMesh</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>👤 Create Your Skill Profile</h1>
+
+    <form method="POST">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <textarea name="bio" placeholder="Short Bio"></textarea>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="phone" placeholder="Phone Number">
+
+        <h3>⚡ Select Skills & Confidence</h3>
+
+        <!-- Skill 1 -->
+        <div class="skill-row">
+            <input type="checkbox" name="skill" value="Python">
+            <label>Python</label>
+            <select name="level">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Expert">Expert</option>
+            </select>
+        </div>
+
+        <!-- Skill 2 -->
+        <div class="skill-row">
+            <input type="checkbox" name="skill" value="AI">
+            <label>AI</label>
+            <select name="level">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Expert">Expert</option>
+            </select>
+        </div>
+
+        <!-- Skill 3 -->
+        <div class="skill-row">
+            <input type="checkbox" name="skill" value="Flask">
+            <label>Flask</label>
+            <select name="level">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Expert">Expert</option>
+            </select>
+        </div>
+
+        <button type="submit">Create Profile</button>
+    </form>
+
+    <br>
+    <a href="/">⬅ Back</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>📊 SkillMesh Dashboard</h1>
+    <h3>Total Users: {{total_users}}</h3>
+
+    <h3>🔥 Top Skills</h3>
+    <ul>
+        {% for skill, count in top_skills.items() %}
+        <li>{{skill}} — {{count}}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+</html>
