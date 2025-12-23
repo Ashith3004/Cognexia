@@ -3,6 +3,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from ai_engine import match_users
 import os
+import json
 
 app = Flask(__name__)
 
@@ -14,8 +15,14 @@ SCOPES = [
 ]
 
 try:
-    creds = Credentials.from_service_account_file(
-        "credentials/service_account.json",
+    # Load credentials from environment variable (NO FILES)
+    if "GOOGLE_CREDS_JSON" not in os.environ:
+        raise RuntimeError("GOOGLE_CREDS_JSON environment variable not set")
+
+    service_account_info = json.loads(os.environ["GOOGLE_CREDS_JSON"])
+
+    creds = Credentials.from_service_account_info(
+        service_account_info,
         scopes=SCOPES
     )
 
@@ -24,6 +31,8 @@ try:
 
     users_ws = sheet.worksheet("users")
     skills_ws = sheet.worksheet("skills")
+
+    print("✅ Google Sheets connected successfully")
 
 except Exception as e:
     print("❌ Google Sheets connection error:", e)
