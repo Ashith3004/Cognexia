@@ -129,7 +129,7 @@
         </div>
 
         <div class="stat-card">
-            <p>Total Skills Listed</p>
+            <p>Top Skills Tracked</p>
             <h2>{{ top_skills | length }}</h2>
         </div>
 
@@ -137,7 +137,7 @@
             <p>Top Community Skill</p>
             <h2>
                 {% if top_skills %}
-                    {{ top_skills.keys() | list | first }}
+                    {{ top_skills[0][0] }}
                 {% else %}
                     —
                 {% endif %}
@@ -150,7 +150,7 @@
         <h2>🔥 Most In-Demand Skills</h2>
 
         {% if top_skills %}
-            {% for skill, count in top_skills.items() %}
+            {% for skill, count in top_skills %}
             <div class="skill-bar">
                 <div class="skill-label">
                     <span>{{ skill }}</span>
