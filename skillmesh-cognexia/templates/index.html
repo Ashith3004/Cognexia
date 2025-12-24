@@ -2,235 +2,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SkillMesh | Connect Skills Instantly</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Cognexia | SkillMesh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            min-height: 100vh;
-            font-family: 'Poppins', sans-serif;
-            color: white;
-        }
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 50px 20px;
-        }
-
-        /* HERO */
-        .hero {
-            text-align: center;
-            margin-bottom: 80px;
-            animation: fadeDown 0.8s ease;
-        }
-
-        .hero h1 {
-            font-size: 52px;
-            margin-bottom: 15px;
-            line-height: 1.2;
-        }
-
-        .hero span {
-            background: linear-gradient(90deg,#43cea2,#ffd86f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 18px;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: auto;
-        }
-
-        .cta {
-            margin-top: 35px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 16px 36px;
-            border-radius: 35px;
-            border: none;
-            background: white;
-            color: #764ba2;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn.secondary {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
-        }
-
-        /* FEATURES */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 80px;
-        }
-
-        .feature-card {
-            background: white;
-            color: #333;
-            border-radius: 24px;
-            padding: 35px;
-            text-align: center;
-            box-shadow: 0 18px 45px rgba(0,0,0,0.2);
-            animation: fadeUp 0.6s ease;
-        }
-
-        .feature-card h3 {
-            margin: 15px 0 10px;
-        }
-
-        .feature-card p {
-            font-size: 14px;
-            color: #555;
-        }
-
-        /* HOW IT WORKS */
-        .how {
-            background: white;
-            color: #333;
-            border-radius: 30px;
-            padding: 50px;
-            box-shadow: 0 18px 50px rgba(0,0,0,0.25);
-            animation: fadeUp 0.7s ease;
-        }
-
-        .how h2 {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-        }
-
-        .step {
-            text-align: center;
-        }
-
-        .step span {
-            font-size: 36px;
-        }
-
-        .step h4 {
-            margin: 15px 0 10px;
-        }
-
-        .step p {
-            font-size: 14px;
-            color: #555;
-        }
-
-        footer {
-            margin-top: 80px;
-            text-align: center;
-            font-size: 14px;
-            opacity: 0.85;
-        }
-
-        @keyframes fadeUp {
-            from {opacity:0; transform: translateY(30px);}
-            to {opacity:1; transform: translateY(0);}
-        }
-
-        @keyframes fadeDown {
-            from {opacity:0; transform: translateY(-30px);}
-            to {opacity:1; transform: translateY(0);}
-        }
-    </style>
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
-<div class="container">
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+    <div class="logo">Cognexia<span>.</span></div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/profile">Create Profile</a>
+        <a href="/request">Request Help</a>
+        <a href="/dashboard">Analytics</a>
+    </div>
+</nav>
 
-    <!-- HERO -->
-    <div class="hero">
-        <h1>Build. Learn. <span>Connect Skills.</span></h1>
-        <p>
-            SkillMesh connects people based on real skills, not just titles.
-            Find help, collaborate instantly, and grow together.
+<!-- ================= HERO SECTION ================= -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>SkillMesh</h1>
+        <p class="subtitle">
+            A smart peer-to-peer skill discovery platform that connects
+            people based on real skills, real needs, and real impact.
         </p>
 
-        <div class="cta">
-    <a href="/profile" class="btn">🚀 Create Profile</a>
-    <a href="/request" class="btn secondary">🤝 Request Help</a>
-    <a href="/dashboard" class="btn secondary">📊 Analytics</a>
-</div>
+        <div class="cta-buttons">
+            <a href="/profile" class="btn primary">🚀 Create Profile</a>
+            <a href="/request" class="btn secondary">🤝 Request Help</a>
+            <a href="/dashboard" class="btn secondary">📊 Analytics</a>
+        </div>
+    </div>
+</section>
 
+<!-- ================= FEATURES ================= -->
+<section class="features">
+    <h2>Why Cognexia?</h2>
 
-    <!-- FEATURES -->
-    <div class="features">
+    <div class="feature-grid">
         <div class="feature-card">
             <span>🧠</span>
             <h3>AI Skill Matching</h3>
-            <p>Smart matching connects you with the right people instantly.</p>
+            <p>Intelligently matches skill seekers with the best peers using AI.</p>
         </div>
 
         <div class="feature-card">
-            <span>⚡</span>
-            <h3>Fast Collaboration</h3>
-            <p>No searching. No messaging chaos. Just instant connections.</p>
+            <span>🤝</span>
+            <h3>Peer Collaboration</h3>
+            <p>Connect instantly with classmates and mentors around you.</p>
         </div>
 
-        <a href="/dashboard" style="text-decoration:none;">
-    <div class="feature-card">
-        <span>📊</span>
-        <h3>Live Analytics</h3>
-        <p>Understand skill trends and community strengths in real time.</p>
-    </div>
-</a>
+        <div class="feature-card">
+            <span>📊</span>
+            <h3>Live Analytics</h3>
+            <p>Visualize trending skills and community strengths.</p>
+        </div>
 
-
-    <!-- HOW IT WORKS -->
-    <div class="how">
-        <h2>How SkillMesh Works</h2>
-        <div class="steps">
-            <div class="step">
-                <span>👤</span>
-                <h4>Create Profile</h4>
-                <p>Add your skills, levels, and contact info.</p>
-            </div>
-
-            <div class="step">
-                <span>📝</span>
-                <h4>Request Help</h4>
-                <p>Describe what you need — AI does the rest.</p>
-            </div>
-
-            <div class="step">
-                <span>🤝</span>
-                <h4>Connect</h4>
-                <p>Reach out instantly to matched skill holders.</p>
-            </div>
+        <div class="feature-card">
+            <span>📱</span>
+            <h3>Direct Contact</h3>
+            <p>Reach skill holders via email or phone without middle layers.</p>
         </div>
     </div>
+</section>
 
-    <footer>
-        © 2025 SkillMesh · Built By AAC Proudly For SJBIT
-    </footer>
+<!-- ================= HOW IT WORKS ================= -->
+<section class="how-it-works">
+    <h2>How It Works</h2>
 
-</div>
+    <div class="steps">
+        <div class="step-card">
+            <h3>1️⃣ Create Profile</h3>
+            <p>Add your skills, expertise level, and contact info.</p>
+        </div>
+
+        <div class="step-card">
+            <h3>2️⃣ Request Help</h3>
+            <p>Describe your problem and let AI find the best matches.</p>
+        </div>
+
+        <div class="step-card">
+            <h3>3️⃣ Connect & Grow</h3>
+            <p>Collaborate, learn faster, and build a strong community.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+    <p>© 2025 Cognexia | Built for TechSprint Hackathon 🚀</p>
+</footer>
 
 </body>
 </html>
-
