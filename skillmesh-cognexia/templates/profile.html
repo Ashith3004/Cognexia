@@ -1,35 +1,286 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Create Profile</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+    <meta charset="UTF-8">
+    <title>Create Profile | SkillMesh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            opacity: 0.85;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: fadeUp 0.6s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        /* ---------- SKILLS GRID ---------- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+        }
+
+        .skill-card {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.18);
+        }
+
+        .skill-card.selected {
+            border-color: #00ffd5;
+            box-shadow: 0 0 15px rgba(0,255,213,0.5);
+        }
+
+        .skill-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .level-select {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .skill-card.selected .level-select {
+            display: block;
+        }
+
+        .level-select select {
+            background: #fff;
+            color: #000;
+        }
+
+        /* ---------- ADD CUSTOM SKILL ---------- */
+        .custom-skill {
+            margin-top: 20px;
+        }
+
+        /* ---------- SUBMIT ---------- */
+        .submit-btn {
+            background: linear-gradient(135deg, #00ffd5, #00b3ff);
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,255,213,0.4);
+        }
+
+        footer {
+            text-align: center;
+            opacity: 0.6;
+            padding: 20px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>Create Your Skill Profile</h2>
+<header>
+    <h1>🚀 Create Your Skill Profile</h1>
+    <p>Showcase your skills. Get matched. Collaborate.</p>
+</header>
 
-<form method="POST" class="form-card">
+<div class="container">
 
-<input name="name" placeholder="Full Name" required>
-<input name="email" placeholder="Email">
-<input name="phone" placeholder="Phone Number">
-<textarea name="bio" placeholder="Short Bio"></textarea>
+    <form method="POST">
 
-<h3>Select Skills</h3>
+        <!-- BASIC INFO -->
+        <div class="card">
+            <h2>👤 Basic Information</h2>
+            <input type="text" name="name" placeholder="Full Name" required>
+            <textarea name="bio" rows="3" placeholder="Short bio about yourself"></textarea>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <input type="text" name="phone" placeholder="Phone Number">
+        </div>
 
-<div class="skill-grid">
-  <label><input type="checkbox" name="skill" value="Python">Python</label>
-  <label><input type="checkbox" name="skill" value="Web Dev">Web Dev</label>
-  <label><input type="checkbox" name="skill" value="AI/ML">AI / ML</label>
-  <label><input type="checkbox" name="skill" value="UI/UX">UI / UX</label>
-  <label><input type="checkbox" name="skill" value="Marketing">Marketing</label>
+        <!-- SKILLS -->
+        <div class="card">
+            <h2>🧠 Select Your Skills</h2>
+
+            <div class="skills-grid" id="skillsGrid">
+
+                <!-- SKILL CARD TEMPLATE -->
+                <!-- Each card creates hidden inputs -->
+                <div class="skill-card" onclick="toggleSkill(this, 'Python')">
+                    <div class="skill-title">🐍 Python</div>
+                    <div class="level-select">
+                        <select name="level">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                        <input type="hidden" name="skill" value="Python">
+                    </div>
+                </div>
+
+                <div class="skill-card" onclick="toggleSkill(this, 'Web Development')">
+                    <div class="skill-title">🌐 Web Development</div>
+                    <div class="level-select">
+                        <select name="level">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                        <input type="hidden" name="skill" value="Web Development">
+                    </div>
+                </div>
+
+                <div class="skill-card" onclick="toggleSkill(this, 'Machine Learning')">
+                    <div class="skill-title">🤖 Machine Learning</div>
+                    <div class="level-select">
+                        <select name="level">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                        <input type="hidden" name="skill" value="Machine Learning">
+                    </div>
+                </div>
+
+                <div class="skill-card" onclick="toggleSkill(this, 'UI/UX Design')">
+                    <div class="skill-title">🎨 UI / UX Design</div>
+                    <div class="level-select">
+                        <select name="level">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                        <input type="hidden" name="skill" value="UI/UX Design">
+                    </div>
+                </div>
+
+                <div class="skill-card" onclick="toggleSkill(this, 'Cloud & DevOps')">
+                    <div class="skill-title">☁️ Cloud & DevOps</div>
+                    <div class="level-select">
+                        <select name="level">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                        <input type="hidden" name="skill" value="Cloud & DevOps">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CUSTOM SKILL -->
+            <div class="custom-skill">
+                <input type="text" name="skill" placeholder="➕ Add custom skill (optional)">
+                <select name="level">
+                    <option value="">Select level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Expert">Expert</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="card">
+            <button class="submit-btn" type="submit">✨ Create My Profile</button>
+        </div>
+
+    </form>
 </div>
 
-<h3>Skill Level (1–5)</h3>
-<input type="hidden" name="level" value="3">
+<footer>
+    © 2025 SkillMesh | Connect Through Skills
+</footer>
 
-<button class="btn">Save Profile</button>
-</form>
+<script>
+    function toggleSkill(card, skillName) {
+        card.classList.toggle("selected");
+
+        const hiddenInput = card.querySelector("input[type='hidden']");
+        const levelSelect = card.querySelector("select");
+
+        if (card.classList.contains("selected")) {
+            hiddenInput.disabled = false;
+            levelSelect.disabled = false;
+        } else {
+            hiddenInput.disabled = true;
+            levelSelect.disabled = true;
+        }
+    }
+</script>
 
 </body>
 </html>
