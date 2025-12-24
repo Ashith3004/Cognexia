@@ -1,61 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Create Profile | SkillMesh</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+  <title>Create Profile</title>
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-<div class="container">
-    <h1>👤 Create Your Skill Profile</h1>
+<h2>Create Your Skill Profile</h2>
 
-    <form method="POST">
-        <input type="text" name="name" placeholder="Your Name" required>
-        <textarea name="bio" placeholder="Short Bio"></textarea>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="text" name="phone" placeholder="Phone Number">
+<form method="POST" class="form-card">
 
-        <h3>⚡ Select Skills & Confidence</h3>
+<input name="name" placeholder="Full Name" required>
+<input name="email" placeholder="Email">
+<input name="phone" placeholder="Phone Number">
+<textarea name="bio" placeholder="Short Bio"></textarea>
 
-        <!-- Skill 1 -->
-        <div class="skill-row">
-            <input type="checkbox" name="skill" value="Python">
-            <label>Python</label>
-            <select name="level">
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Expert">Expert</option>
-            </select>
-        </div>
+<h3>Select Skills</h3>
 
-        <!-- Skill 2 -->
-        <div class="skill-row">
-            <input type="checkbox" name="skill" value="AI">
-            <label>AI</label>
-            <select name="level">
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Expert">Expert</option>
-            </select>
-        </div>
-
-        <!-- Skill 3 -->
-        <div class="skill-row">
-            <input type="checkbox" name="skill" value="Flask">
-            <label>Flask</label>
-            <select name="level">
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Expert">Expert</option>
-            </select>
-        </div>
-
-        <button type="submit">Create Profile</button>
-    </form>
-
-    <br>
-    <a href="/">⬅ Back</a>
+<div class="skill-grid">
+  <label><input type="checkbox" name="skill" value="Python">Python</label>
+  <label><input type="checkbox" name="skill" value="Web Dev">Web Dev</label>
+  <label><input type="checkbox" name="skill" value="AI/ML">AI / ML</label>
+  <label><input type="checkbox" name="skill" value="UI/UX">UI / UX</label>
+  <label><input type="checkbox" name="skill" value="Marketing">Marketing</label>
 </div>
+
+<h3>Skill Level (1–5)</h3>
+<input type="hidden" name="level" value="3">
+
+<button class="btn">Save Profile</button>
+</form>
 
 </body>
 </html>
