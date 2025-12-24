@@ -1,41 +1,27 @@
 from flask import Flask, render_template, request, redirect
 import gspread
 from google.oauth2.service_account import Credentials
-import os
 from ai_engine import match_users
+import os
+import json
 
 app = Flask(__name__)
 
-# ================== GOOGLE SHEETS CONFIG ==================
-
+# -------- GOOGLE SHEETS AUTH (ENV SAFE) --------
 SCOPES = [
-    "https://www.googleapis.com/auth/spreadsheets",
+    "https://spreadsheets.google.com/feeds",
     "https://www.googleapis.com/auth/drive"
 ]
 
-# Credentials from ENV (Render-safe)
-creds = Credentials.from_service_account_info(
-    {
-        "type": "service_account",
-        "project_id": os.environ.get("PROJECT_ID"),
-        "private_key_id": os.environ.get("PRIVATE_KEY_ID"),
-        "private_key": os.environ.get("PRIVATE_KEY").replace("\\n", "\n"),
-        "client_email": os.environ.get("CLIENT_EMAIL"),
-        "client_id": os.environ.get("CLIENT_ID"),
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url": os.environ.get("CLIENT_CERT_URL"),
-    },
-    scopes=SCOPES
-)
-
+creds_json = json.loads(os.environ["GOOGLE_CREDS"])
+creds = Credentials.from_service_account_info(creds_json, scopes=SCOPES)
 client = gspread.authorize(creds)
+
 sheet = client.open("SkillMeshDB")
 users_ws = sheet.worksheet("users")
 skills_ws = sheet.worksheet("skills")
 
-# ================== ROUTES ==================
+# ---------------- ROUTES ----------------
 
 @app.route("/")
 def index():
@@ -53,15 +39,12 @@ def profile():
         skills = request.form.getlist("skill")
         levels = request.form.getlist("level")
 
-        # Store user
         users_ws.append_row([name, bio, email, phone])
 
-        # Store skills
-        for skill, level in zip(skills, levels):
-            if skill.strip():
-                skills_ws.append_row([name, skill, level])
+        for s, l in zip(skills, levels):
+            skills_ws.append_row([name, s, l])
 
-        return redirect("/")
+        return redirect("/dashboard")
 
     return render_template("profile.html")
 
@@ -83,16 +66,16 @@ def help_request():
                 "level": row["level"]
             })
 
-        raw_matches = match_users(desc, users)
+        raw = match_users(desc, users)
 
-        for m in raw_matches:
-            user = next(u for u in users_data if u["name"] == m["name"])
+        for m in raw:
+            u = next(x for x in users_data if x["name"] == m["name"])
             matches.append({
                 "name": m["name"],
                 "score": m["score"],
                 "matched": m["matched"],
-                "email": user["email"],
-                "phone": user["phone"]
+                "email": u["email"],
+                "phone": u["phone"]
             })
 
     return render_template("request.html", matches=matches)
@@ -100,36 +83,26 @@ def help_request():
 
 @app.route("/dashboard")
 def dashboard():
-    skills_data = skills_ws.get_all_records()
-    users_data = users_ws.get_all_records()
+    users = users_ws.get_all_records()
+    skills = skills_ws.get_all_records()
 
-    total_users = len(users_data)
+    total_users = len(users)
+    total_skills = len(skills)
 
-    # Count skills
     skill_count = {}
-    for row in skills_data:
-        skill = row.get("skill")
-        if skill:
-            skill_count[skill] = skill_count.get(skill, 0) + 1
+    for s in skills:
+        skill_count[s["skill"]] = skill_count.get(s["skill"], 0) + 1
 
-    # Convert to LIST (IMPORTANT FIX)
-    top_skills = sorted(skill_count.items(), key=lambda x: x[1], reverse=True)
-
-    recent_users = users_data[-5:] if len(users_data) >= 5 else users_data
+    top_skills = sorted(skill_count.items(), key=lambda x: x[1], reverse=True)[:5]
+    recent_users = users[-5:]
 
     return render_template(
-        "dashboard.html",
-        total_users=total_users,
-        top_skills=top_skills,
-        recent_users=recent_users
-    )
+    "dashboard.html",
+    total_users=total_users,
+    top_skills=top_skills
+)
 
 
-# ================== RUN ==================
 
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=int(os.environ.get("PORT", 10000)),
-        debug=True
-    )
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
