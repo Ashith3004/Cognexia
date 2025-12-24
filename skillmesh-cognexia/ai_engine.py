@@ -1,42 +1,29 @@
-import gspread
-from google.oauth2.service_account import Credentials
-import os
+import re
 
-SCOPES = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"
-]
-
-creds = Credentials.from_service_account_file(
-    "credentials/service_account.json",
-    scopes=SCOPES
-)
-
-client = gspread.authorize(creds)
-
-def extract_skills(text):
-    keywords = [
-        "python","java","ai","ml","flask","react",
-        "cloud","devops","html","css","javascript"
-    ]
+def extract_keywords(text):
     text = text.lower()
-    return [k for k in keywords if k in text]
+    return set(re.findall(r"[a-zA-Z]+", text))
 
 
-def match_users(request_text, users_skills):
-    req_skills = extract_skills(request_text)
+def match_users(description, users):
+    """
+    users = {
+        "Alice": [{"skill": "python", "level": "advanced"}, ...]
+    }
+    """
+    desc_keywords = extract_keywords(description)
     results = []
 
-    for user, skills in users_skills.items():
-        skill_names = [s["skill"].lower() for s in skills]
-        common = set(req_skills) & set(skill_names)
+    for name, skills in users.items():
+        user_skills = {s["skill"].lower() for s in skills}
+        matched = desc_keywords & user_skills
 
-        if common:
-            score = int((len(common) / len(req_skills)) * 100) if req_skills else 0
+        if matched:
+            score = len(matched)
             results.append({
-                "name": user,
+                "name": name,
                 "score": score,
-                "matched": list(common)
+                "matched": list(matched)
             })
 
     return sorted(results, key=lambda x: x["score"], reverse=True)
