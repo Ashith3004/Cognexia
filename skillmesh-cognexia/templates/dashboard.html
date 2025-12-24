@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+  <title>Analytics Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-<div class="container">
-    <h1>📊 SkillMesh Dashboard</h1>
-    <h3>Total Users: {{total_users}}</h3>
+<h2>📊 SkillMesh Analytics</h2>
 
-    <h3>🔥 Top Skills</h3>
-    <ul>
-        {% for skill, count in top_skills.items() %}
-        <li>{{skill}} — {{count}}</li>
-        {% endfor %}
-    </ul>
+<div class="stats">
+  <div class="stat-card">👤 Users<br><b>{{ total_users }}</b></div>
+  <div class="stat-card">🛠 Skills<br><b>{{ total_skills }}</b></div>
 </div>
+
+<h3>🔥 Top Skills</h3>
+<ul>
+  {% for skill, count in top_skills %}
+    <li>{{ skill }} – {{ count }}</li>
+  {% endfor %}
+</ul>
+
+<h3>🆕 Recent Users</h3>
+<ul>
+  {% for u in recent_users %}
+    <li>{{ u.name }} – {{ u.email }}</li>
+  {% endfor %}
+</ul>
 
 </body>
 </html>
