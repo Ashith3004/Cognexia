@@ -2,31 +2,19 @@ from flask import Flask, render_template, request, redirect
 import gspread
 from google.oauth2.service_account import Credentials
 from ai_engine import match_users
-import json
 import os
+import json
 
 app = Flask(__name__)
 
-# ---------------- GOOGLE SHEETS SETUP ----------------
-
+# -------- GOOGLE SHEETS AUTH (ENV SAFE) --------
 SCOPES = [
-    "https://www.googleapis.com/auth/spreadsheets",
+    "https://spreadsheets.google.com/feeds",
     "https://www.googleapis.com/auth/drive"
 ]
 
-# 🔐 LOAD FROM ENV VARIABLE (NO FILE USED)
-service_account_json = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
-
-if not service_account_json:
-    raise Exception("GOOGLE_SERVICE_ACCOUNT_JSON env variable not set")
-
-service_account_info = json.loads(service_account_json)
-
-creds = Credentials.from_service_account_info(
-    service_account_info,
-    scopes=SCOPES
-)
-
+creds_json = json.loads(os.environ["GOOGLE_CREDS"])
+creds = Credentials.from_service_account_info(creds_json, scopes=SCOPES)
 client = gspread.authorize(creds)
 
 sheet = client.open("SkillMeshDB")
@@ -53,10 +41,10 @@ def profile():
 
         users_ws.append_row([name, bio, email, phone])
 
-        for skill, level in zip(skills, levels):
-            skills_ws.append_row([name, skill, level])
+        for s, l in zip(skills, levels):
+            skills_ws.append_row([name, s, l])
 
-        return redirect("/")
+        return redirect("/dashboard")
 
     return render_template("profile.html")
 
@@ -78,16 +66,16 @@ def help_request():
                 "level": row["level"]
             })
 
-        raw_matches = match_users(desc, users)
+        raw = match_users(desc, users)
 
-        for m in raw_matches:
-            user = next(u for u in users_data if u["name"] == m["name"])
+        for m in raw:
+            u = next(x for x in users_data if x["name"] == m["name"])
             matches.append({
                 "name": m["name"],
                 "score": m["score"],
                 "matched": m["matched"],
-                "email": user["email"],
-                "phone": user["phone"]
+                "email": u["email"],
+                "phone": u["phone"]
             })
 
     return render_template("request.html", matches=matches)
@@ -95,19 +83,25 @@ def help_request():
 
 @app.route("/dashboard")
 def dashboard():
-    skills_data = skills_ws.get_all_records()
-    users_data = users_ws.get_all_records()
+    users = users_ws.get_all_records()
+    skills = skills_ws.get_all_records()
+
+    total_users = len(users)
+    total_skills = len(skills)
 
     skill_count = {}
-    for row in skills_data:
-        skill_count[row["skill"]] = skill_count.get(row["skill"], 0) + 1
+    for s in skills:
+        skill_count[s["skill"]] = skill_count.get(s["skill"], 0) + 1
 
-    top_skills = dict(sorted(skill_count.items(), key=lambda x: x[1], reverse=True)[:5])
+    top_skills = sorted(skill_count.items(), key=lambda x: x[1], reverse=True)[:5]
+    recent_users = users[-5:]
 
     return render_template(
         "dashboard.html",
-        total_users=len(users_data),
-        top_skills=top_skills
+        total_users=total_users,
+        total_skills=total_skills,
+        top_skills=top_skills,
+        recent_users=recent_users
     )
 
 
